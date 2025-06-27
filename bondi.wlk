@@ -14,10 +14,10 @@ object bondi{
     return pasajerosb
   }
 
-  method detenerse(ruta, numeroParada){
+  method detenerse(ruta, paradas){
     if (tanque >= self.consumoPa()) {
       tanque -= self.consumoPa()
-      suben = ruta.pasajerosPorParada().get(numeroParada)
+      suben = ruta.pasajerosPorParada().get(paradas)
       if (pasajerosb + suben <= max_personas) {
         pasajerosb += suben
         console.println(Ruta.paradas() - 1)
@@ -58,9 +58,11 @@ class Parada{
 object simulador{
   method simular(parada){
     const cantidadParadas = parada.cantparadas()
-    cantidadParadas.times({ i => bondi.detenerse(ruta, numeroParada)
+    cantidadParadas.times({ i => 
+    bondi.detenerse(ruta, paradas)
     })
   }
 }
 
-//cambioss
+//crear el objeto ruta para poder usar sus metodos
+//var hola = new Ruta()
