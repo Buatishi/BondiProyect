@@ -6,22 +6,40 @@ object bondi{
   var suben = 0
   var rumbo = 0
   var pasajerosb = 0
+  var paradaActual = 0
 
   method consumoPa() {
     return gasto + 0.1 * pasajerosb
   }
+  
   method cant_pasajeros(){
     return pasajerosb
   }
 
-  method detenerse(ruta, paradas){
+  method detenerse(ruta){
     if (tanque >= self.consumoPa()) {
       tanque -= self.consumoPa()
-      suben = ruta.pasajerosPorParada().get(paradas)
-      if (pasajerosb + suben <= max_personas) {
-        pasajerosb += suben
-        console.println(Ruta.paradas() - 1)
+      
+      if (paradaActual != 0 && paradaActual != ruta.paradas() - 1) {
+        suben = ruta.pasajerosPorParada().get(paradaActual)
+        if (pasajerosb + suben <= max_personas) {
+          pasajerosb += suben
+          ruta.vaciarParada(paradaActual)
+        }
       }
+      
+      if (rumbo == 0) {
+        paradaActual += 1
+      } else {
+        paradaActual -= 1
+      }
+      
+      if (paradaActual == ruta.paradas() - 1) {
+        rumbo = 1
+      } else if (paradaActual == 0) {
+        rumbo = 0
+      }
+      
       return pasajerosb
     }
     return tanque
@@ -30,17 +48,23 @@ object bondi{
   method terminal(){
     pasajerosb = 0
     tanque = 15
-    rumbo += 1
   }
+  
+  method paradaActual() = paradaActual
+  method rumbo() = rumbo
 }
+
 class Ruta{
-  var property paradas = (1.randomUpTo(7).round())
+  var property paradas = (3.randomUpTo(7).round())
   const pasajerosPorParada = []
   var pasajerosRuta = 0
 
   method inicia() {
     paradas.times({ i => 
-      const cantidadPasajeros = (1.randomUpTo(5).round())
+      var cantidadPasajeros = 0
+      if (i != 0 && i != paradas - 1) {
+        cantidadPasajeros = (1.randomUpTo(5).round())
+      }
       pasajerosPorParada.add(cantidadPasajeros)
     })
     pasajerosRuta = pasajerosPorParada.sum()
@@ -48,21 +72,8 @@ class Ruta{
 
   method pasajerosPorParada() = pasajerosPorParada
   method totalPasajeros() = pasajerosRuta
-}
-
-class Parada{
-  var property pasajerosp = (1.randomUpTo(5).round())
-}
-
-
-object simulador{
-  method simular(parada){
-    const cantidadParadas = parada.cantparadas()
-    cantidadParadas.times({ i => 
-    bondi.detenerse(ruta, paradas)
-    })
+  
+  method vaciarParada(indice) {
+    pasajerosPorParada.put(indice, 0)
   }
 }
-
-//crear el objeto ruta para poder usar sus metodos
-//var hola = new Ruta()
