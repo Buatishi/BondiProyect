@@ -16,7 +16,7 @@ object bondi{
     return pasajerosb
   }
 
-  method detenerse(ruta){
+  method avanzar(ruta){
     if (tanque >= self.consumoPa()) {
       tanque -= self.consumoPa()
       

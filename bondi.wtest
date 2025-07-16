@@ -1,0 +1,31 @@
+import bondi.*
+
+// Run all tests
+
+// Run describe
+describe "Tests bondi" {
+
+  // Run test | Debug test
+  test "Sobrecarga de pasajeros - mas pasajeros que capacidad" {
+    const ruta = new Ruta(paradas = 3)
+    ruta.inicia()
+    ruta.pasajerosPorParada().put(1, 25)
+    
+    bondi.avanzar(ruta)
+    
+    assert.that(bondi.cant_pasajeros() <= 20)
+    //"that" = espero respuesta true
+  }
+
+  // Run test | Debug test
+  test "avanzar() sin inicializar ruta" {
+    const ruta = new Ruta(paradas = 4)
+    
+    try {
+      bondi.avanzar(ruta)
+      assert.fail("falla al acceder a lista no inicializada")
+    } catch e {
+      assert.that(true)
+    }
+  }
+}
